@@ -1,0 +1,16 @@
+class Solution {
+    public int subarrayXor(int[] arr, int k) {   // <-- name changed
+        int prefixXor = 0, count = 0;
+        HashMap<Integer, Integer> map = new HashMap<>();
+        map.put(0, 1);
+        for (int num : arr) {
+            prefixXor ^= num;
+            int required = prefixXor ^ k;
+            if (map.containsKey(required)) {
+                count += map.get(required);
+            }
+            map.put(prefixXor, map.getOrDefault(prefixXor, 0) + 1);
+        }
+        return count;
+    }
+}
