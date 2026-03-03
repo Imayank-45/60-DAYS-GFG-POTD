@@ -1,0 +1,23 @@
+class Solution {
+    public int totalElements(int[] arr) {
+        int[] freq = new int[100001];
+        int left = 0, distinct = 0, mx= 0;
+        for(int right = 0; right < arr.length; right++) {
+            if(freq[arr[right]] == 0)
+                distinct++;
+            freq[arr[right]]++;
+            while(distinct > 2) {
+                freq[arr[left]]--;
+                
+                if(freq[arr[left]] == 0)
+                    distinct--;
+                    
+                left++;
+            }
+            
+            mx = Math.max(mx, right - left + 1);
+        }
+        
+        return mx;
+    }
+}
