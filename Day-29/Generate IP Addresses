@@ -1,0 +1,25 @@
+class Solution {
+    public ArrayList<String> generateIp(String s) {
+        ArrayList<String> res = new ArrayList<>();
+        backtrack(s, 0, new ArrayList<>(), res);
+        return res;
+    }
+    private void backtrack(String s, int start, List<String> path, ArrayList<String> res) {
+        if (path.size() == 4) {
+            if (start == s.length()) {
+                res.add(String.join(".", path));
+            }
+            return;
+        }
+        for (int len = 1; len <= 3; len++) {
+            if (start + len > s.length()) break;
+            String segment = s.substring(start, start + len);
+            if ((segment.startsWith("0") && segment.length() > 1) || Integer.parseInt(segment) > 255) {
+                continue;
+            }
+            path.add(segment);
+            backtrack(s, start + len, path, res);
+            path.remove(path.size() - 1);
+        }
+    }
+}
