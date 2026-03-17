@@ -1,0 +1,91 @@
+/* 
+class Node {
+    int data;
+    Node left;
+    Node right;
+
+    Node(int data) {
+        this.data = data;
+        left = null;
+        right = null;
+    }
+}
+*/
+
+class Solution {
+    public int minTime(Node root, int target) {
+        if (root == null) return 0;
+
+        Map<Node, Node> parent = new HashMap<>();
+        buildParentMap(root, parent);
+        Node start = findTarget(root, target);
+        if (start == null) return 0;
+        Queue<Node> q = new LinkedList<>();
+        Set<Node> visited = new HashSet<>();
+
+        q.add(start);
+        visited.add(start);
+
+        int time = 0;
+
+        while (!q.isEmpty()) {
+            int size = q.size();
+            boolean burnedNew = false;
+
+            for (int i = 0; i < size; i++) {
+                Node curr = q.poll();
+
+                // Spread fire to left child
+                if (curr.left != null && !visited.contains(curr.left)) {
+                    visited.add(curr.left);
+                    q.add(curr.left);
+                    burnedNew = true;
+                }
+
+                // Spread fire to right child
+                if (curr.right != null && !visited.contains(curr.right)) {
+                    visited.add(curr.right);
+                    q.add(curr.right);
+                    burnedNew = true;
+                }
+
+                // Spread fire to parent
+                if (parent.containsKey(curr) && !visited.contains(parent.get(curr))) {
+                    visited.add(parent.get(curr));
+                    q.add(parent.get(curr));
+                    burnedNew = true;
+                }
+            }
+
+            if (burnedNew) time++;
+        }
+
+        return time;
+    }
+
+    // Helper: Build parent map using BFS
+    private void buildParentMap(Node root, Map<Node, Node> parent) {
+        Queue<Node> q = new LinkedList<>();
+        q.add(root);
+        while (!q.isEmpty()) {
+            Node curr = q.poll();
+            if (curr.left != null) {
+                parent.put(curr.left, curr);
+                q.add(curr.left);
+            }
+            if (curr.right != null) {
+                parent.put(curr.right, curr);
+                q.add(curr.right);
+            }
+        }
+    }
+
+    // Helper: Find target node
+    private Node findTarget(Node root, int target) {
+        if (root == null) return null;
+        if (root.data == target) return root;
+        Node left = findTarget(root.left, target);
+        if (left != null) return left;
+        return findTarget(root.right, target);
+    }
+}
