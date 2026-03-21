@@ -1,0 +1,25 @@
+class Solution {
+    public ArrayList<Integer> countBSTs(int[] arr) {
+        int[] catalan = new int[7];
+        catalan[0] = 1;
+        catalan[1] = 1;
+        for (int n = 2; n <= 6; n++) {
+            for (int i = 0; i < n; i++) {
+                catalan[n] += catalan[i] * catalan[n - 1 - i];
+            }
+        }
+         ArrayList<Integer> result = new ArrayList<>();
+        
+        for (int i = 0; i < arr.length; i++) {
+            int left = 0, right = 0;
+            
+            for (int j = 0; j < arr.length; j++) {
+                if (arr[j] < arr[i]) left++;
+                else if (arr[j] > arr[i]) right++;
+            }
+            result.add(catalan[left] * catalan[right]);
+        }
+        
+        return result;
+    }
+}
